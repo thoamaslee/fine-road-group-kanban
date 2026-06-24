@@ -25,9 +25,15 @@ const nameForm = document.querySelector("#nameForm");
 const nameInput = document.querySelector("#nameInput");
 const totalCount = document.querySelector("#totalCount");
 const balanceText = document.querySelector("#balanceText");
+const exportButton = document.querySelector("#exportButton");
 const shuffleButton = document.querySelector("#shuffleButton");
 const clearButton = document.querySelector("#clearButton");
 const logoutButton = document.querySelector("#logoutButton");
+const exportDialog = document.querySelector("#exportDialog");
+const exportText = document.querySelector("#exportText");
+const closeExportButton = document.querySelector("#closeExportButton");
+const copyExportButton = document.querySelector("#copyExportButton");
+const downloadExportButton = document.querySelector("#downloadExportButton");
 const groupTemplate = document.querySelector("#groupTemplate");
 const cardTemplate = document.querySelector("#cardTemplate");
 
@@ -93,6 +99,47 @@ clearButton.addEventListener("click", () => {
     group.members = [];
   });
   persistAndRender();
+});
+
+exportButton.addEventListener("click", () => {
+  exportText.value = buildExportText();
+  exportDialog.hidden = false;
+  exportText.focus();
+  exportText.select();
+});
+
+closeExportButton.addEventListener("click", () => {
+  closeExportDialog();
+});
+
+exportDialog.addEventListener("click", (event) => {
+  if (event.target === exportDialog) closeExportDialog();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !exportDialog.hidden) closeExportDialog();
+});
+
+copyExportButton.addEventListener("click", async () => {
+  exportText.select();
+  try {
+    await navigator.clipboard.writeText(exportText.value);
+    copyExportButton.textContent = "복사됨";
+  } catch {
+    copyExportButton.textContent = "직접 복사";
+  }
+  window.setTimeout(() => {
+    copyExportButton.textContent = "복사";
+  }, 1200);
+});
+
+downloadExportButton.addEventListener("click", () => {
+  const blob = new Blob([exportText.value], { type: "text/plain;charset=utf-8" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "fine-road-groups.txt";
+  link.click();
+  URL.revokeObjectURL(link.href);
 });
 
 function render() {
@@ -287,6 +334,35 @@ function removeMember(memberId) {
   state.groups.forEach((group) => {
     group.members = group.members.filter((member) => member.id !== memberId);
   });
+}
+
+function closeExportDialog() {
+  exportDialog.hidden = true;
+  exportButton.focus();
+}
+
+function buildExportText() {
+  const lines = ["파인로드 조편성", ""];
+
+  state.groups.forEach((group) => {
+    lines.push(`${group.title} (${group.members.length}명)`);
+
+    if (group.members.length === 0) {
+      lines.push("- 비어 있음");
+    } else {
+      group.members.forEach((member, index) => {
+        const roles = [];
+        if (index === 0) roles.push("리딩");
+        if (index === group.members.length - 1) roles.push("후미");
+        const roleText = roles.length > 0 ? ` [${roles.join(", ")}]` : "";
+        lines.push(`${index + 1}. ${member.name}${roleText}`);
+      });
+    }
+
+    lines.push("");
+  });
+
+  return lines.join("\n").trimEnd();
 }
 
 function renderSummary() {

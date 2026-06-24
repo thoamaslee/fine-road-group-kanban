@@ -51,6 +51,7 @@
           <span id="balanceText">이름을 추가하면 자동으로 빈 조에 배정됩니다.</span>
         </div>
         <div class="actions">
+          <button id="exportButton" type="button">텍스트 내보내기</button>
           <button id="shuffleButton" type="button">섞어서 배정</button>
           <button id="clearButton" type="button" class="secondary">전체 비우기</button>
           <button id="logoutButton" type="button" class="secondary">로그아웃</button>
@@ -59,6 +60,20 @@
 
       <section id="board" class="board" aria-label="4개 조 칸반"></section>
     </main>
+
+    <section id="exportDialog" class="dialog-backdrop" hidden>
+      <div class="dialog-panel" role="dialog" aria-modal="true" aria-labelledby="exportTitle">
+        <header class="dialog-head">
+          <h2 id="exportTitle">조편성 텍스트</h2>
+          <button id="closeExportButton" type="button" class="icon-button" aria-label="닫기">×</button>
+        </header>
+        <textarea id="exportText" readonly></textarea>
+        <div class="dialog-actions">
+          <button id="copyExportButton" type="button">복사</button>
+          <button id="downloadExportButton" type="button" class="secondary">txt 저장</button>
+        </div>
+      </div>
+    </section>
 
     <template id="groupTemplate">
       <article class="group-column">
