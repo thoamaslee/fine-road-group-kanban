@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>파인로드 조편성 앱</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Fine Road</p>
+          <h1>파인로드 조편성</h1>
+        </div>
+        <form id="nameForm" class="name-form">
+          <label for="nameInput">이름 입력</label>
+          <div class="input-row">
+            <textarea
+              id="nameInput"
+              rows="2"
+              placeholder="이름을 입력하세요. 줄바꿈이나 쉼표로 여러 명을 추가할 수 있어요."
+            ></textarea>
+            <button type="submit">추가</button>
+          </div>
+        </form>
+      </header>
+
+      <section class="toolbar" aria-label="조편성 도구">
+        <div class="summary">
+          <strong id="totalCount">0명</strong>
+          <span id="balanceText">이름을 추가하면 자동으로 빈 조에 배정됩니다.</span>
+        </div>
+        <div class="actions">
+          <button id="shuffleButton" type="button">섞어서 배정</button>
+          <button id="clearButton" type="button" class="secondary">전체 비우기</button>
+        </div>
+      </section>
+
+      <section id="board" class="board" aria-label="4개 조 칸반"></section>
+    </main>
+
+    <template id="groupTemplate">
+      <article class="group-column">
+        <header class="group-head">
+          <input class="group-title" type="text" maxlength="16" />
+          <span class="group-count">0명</span>
+        </header>
+        <div class="drop-zone"></div>
+      </article>
+    </template>
+
+    <template id="cardTemplate">
+      <article class="name-card" draggable="true">
+        <span class="drag-handle" aria-hidden="true">::</span>
+        <input class="card-name" type="text" maxlength="24" />
+        <div class="card-badges" aria-label="역할"></div>
+        <button class="delete-card" type="button" aria-label="삭제">×</button>
+      </article>
+    </template>
+
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "fine-road-group-kanban",
+  "version": "1.0.0",
+  "private": true,
+  "description": "파인로드 4조 조편성 칸반 앱",
+  "scripts": {
+    "start": "serve -s . -l tcp://0.0.0.0:${PORT:-3000}",
+    "check": "node --check script.js"
+  },
+  "dependencies": {
+    "serve": "^14.2.4"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
