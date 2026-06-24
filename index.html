@@ -7,7 +7,26 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="app-shell">
+    <section id="loginView" class="login-view" aria-label="로그인">
+      <form id="loginForm" class="login-panel">
+        <div>
+          <p class="eyebrow">Fine Road</p>
+          <h1>파인로드 조편성</h1>
+        </div>
+        <label>
+          아이디
+          <input id="loginId" type="text" autocomplete="username" required />
+        </label>
+        <label>
+          비밀번호
+          <input id="loginPassword" type="password" autocomplete="current-password" required />
+        </label>
+        <p id="loginError" class="login-error" aria-live="polite"></p>
+        <button type="submit">로그인</button>
+      </form>
+    </section>
+
+    <main id="appView" class="app-shell" hidden>
       <header class="topbar">
         <div>
           <p class="eyebrow">Fine Road</p>
@@ -34,6 +53,7 @@
         <div class="actions">
           <button id="shuffleButton" type="button">섞어서 배정</button>
           <button id="clearButton" type="button" class="secondary">전체 비우기</button>
+          <button id="logoutButton" type="button" class="secondary">로그아웃</button>
         </div>
       </section>
 

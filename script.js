@@ -1,4 +1,9 @@
 const storageKey = "group-kanban-state-v1";
+const authKey = "fine-road-auth-v1";
+const loginCredentials = {
+  id: "fine",
+  password: "road",
+};
 const groupCount = 4;
 const defaultGroups = Array.from({ length: groupCount }, (_, index) => ({
   id: `group-${index + 1}`,
@@ -9,6 +14,12 @@ const defaultGroups = Array.from({ length: groupCount }, (_, index) => ({
 let state = loadState();
 let draggedCardId = null;
 
+const loginView = document.querySelector("#loginView");
+const appView = document.querySelector("#appView");
+const loginForm = document.querySelector("#loginForm");
+const loginId = document.querySelector("#loginId");
+const loginPassword = document.querySelector("#loginPassword");
+const loginError = document.querySelector("#loginError");
 const board = document.querySelector("#board");
 const nameForm = document.querySelector("#nameForm");
 const nameInput = document.querySelector("#nameInput");
@@ -16,8 +27,32 @@ const totalCount = document.querySelector("#totalCount");
 const balanceText = document.querySelector("#balanceText");
 const shuffleButton = document.querySelector("#shuffleButton");
 const clearButton = document.querySelector("#clearButton");
+const logoutButton = document.querySelector("#logoutButton");
 const groupTemplate = document.querySelector("#groupTemplate");
 const cardTemplate = document.querySelector("#cardTemplate");
+
+loginForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const id = loginId.value.trim();
+  const password = loginPassword.value;
+
+  if (id !== loginCredentials.id || password !== loginCredentials.password) {
+    loginError.textContent = "아이디 또는 비밀번호가 맞지 않습니다.";
+    loginPassword.value = "";
+    loginPassword.focus();
+    return;
+  }
+
+  sessionStorage.setItem(authKey, "signed-in");
+  loginError.textContent = "";
+  loginPassword.value = "";
+  showApp();
+});
+
+logoutButton.addEventListener("click", () => {
+  sessionStorage.removeItem(authKey);
+  showLogin();
+});
 
 nameForm.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -91,6 +126,19 @@ function render() {
   });
 
   renderSummary();
+}
+
+function showApp() {
+  loginView.hidden = true;
+  appView.hidden = false;
+  render();
+  nameInput.focus();
+}
+
+function showLogin() {
+  appView.hidden = true;
+  loginView.hidden = false;
+  loginId.focus();
 }
 
 function createCard(member, roles) {
@@ -289,4 +337,8 @@ function shuffle(items) {
   return nextItems;
 }
 
-render();
+if (sessionStorage.getItem(authKey) === "signed-in") {
+  showApp();
+} else {
+  showLogin();
+}
